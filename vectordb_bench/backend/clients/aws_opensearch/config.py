@@ -110,18 +110,13 @@ class AWSOpenSearchIndexConfig(BaseModel, DBCaseConfig):
         log.info(f"Using metric_type: {self.metric_type_name} for index creation")
         log.info(f"Resulting space_type: {self.parse_metric()} for index creation")
 
-        parameters = {"ef_construction": self.efConstruction, "m": self.M}
-
-        if self.engine == AWSOS_Engine.faiss and self.faiss_use_fp16:
-            parameters["encoder"] = {"name": "sq", "parameters": {"type": "fp16"}}
-
         return {
             "name": "hnsw",
             "engine": self.engine.value,
             "parameters": {
                 "ef_construction": self.efConstruction,
                 "m": self.M,
-                "ef_search": self.efSearch,
+                "ef_search": self.ef_search,
                 **(
                     {"encoder": {"name": "sq", "parameters": {"type": self.quantization_type.fp16.value}}}
                     if self.use_quant
