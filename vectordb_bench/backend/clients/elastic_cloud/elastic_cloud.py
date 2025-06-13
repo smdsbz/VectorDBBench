@@ -48,6 +48,7 @@ class ElasticCloud(VectorDB):
         self.vector_col_name = vector_col_name
         self.with_scalar_labels = with_scalar_labels
         self.es_version = db_config.get("es_version", 9)
+        del db_config["es_version"]
 
         log.info(f"using elasticsearch version {self.es_version}")
         if self.es_version == 8:
