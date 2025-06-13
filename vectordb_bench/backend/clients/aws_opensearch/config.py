@@ -53,6 +53,7 @@ class AWSOpenSearchIndexConfig(BaseModel, DBCaseConfig):
     number_of_shards: int | None = 1
     number_of_replicas: int | None = 0
     number_of_segments: int | None = 1
+    number_of_indexing_clients: int | None = 1
     refresh_interval: str | None = "60s"
     force_merge_enabled: bool | None = True
     flush_threshold_size: str | None = "5120mb"
