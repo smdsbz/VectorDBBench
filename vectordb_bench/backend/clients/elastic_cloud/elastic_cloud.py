@@ -47,8 +47,13 @@ class ElasticCloud(VectorDB):
         self.label_col_name = label_col_name
         self.vector_col_name = vector_col_name
         self.with_scalar_labels = with_scalar_labels
+        self.es_version = db_config.get("es_version", 9)
 
-        from elasticsearch import Elasticsearch
+        log.info(f"using elasticsearch version {self.es_version}")
+        if self.es_version == 8:
+            from elasticsearch8 import Elasticsearch
+        else:
+            from elasticsearch import Elasticsearch
 
         client = Elasticsearch(**self.db_config)
 
@@ -62,7 +67,10 @@ class ElasticCloud(VectorDB):
     @contextmanager
     def init(self) -> None:
         """connect to elasticsearch"""
-        from elasticsearch import Elasticsearch
+        if self.es_version == 8:
+            from elasticsearch8 import Elasticsearch
+        else:
+            from elasticsearch import Elasticsearch
 
         self.client = Elasticsearch(**self.db_config, request_timeout=180)
 
@@ -143,6 +151,10 @@ class ElasticCloud(VectorDB):
             ]
         )
         try:
+            if self.es_version == 8:
+                from elasticsearch8.helpers import bulk
+            else:
+                from elasticsearch.helpers import bulk
             bulk_insert_res = bulk(self.client, insert_data)
             return (bulk_insert_res[0], None)
         except Exception as e:

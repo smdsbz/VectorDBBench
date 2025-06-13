@@ -79,7 +79,7 @@ all = [
 qdrant          = [ "qdrant-client" ]
 pinecone        = [ "pinecone-client" ]
 weaviate        = [ "weaviate-client" ]
-elastic         = [ "elasticsearch" ]
+elastic         = [ "elasticsearch", "elasticsearch8" ]
 # For elastic and aliyun_elasticsearch
 
 pgvector        = [ "psycopg", "psycopg-binary", "pgvector" ]
