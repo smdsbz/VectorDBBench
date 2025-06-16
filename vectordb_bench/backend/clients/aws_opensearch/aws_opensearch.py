@@ -434,7 +434,7 @@ class AWSOpenSearch(VectorDB):
         # output = self.client.indices.put_settings(
         #     index=self.index_name, body={"index.knn.advanced.approximate_threshold": "0"}
         # )
-        log.info(f"response of updating setting is: {output}")
+        # log.info(f"response of updating setting is: {output}")
 
         log.info(f"Starting force merge for index {self.index_name}")
         segments = self.case_config.number_of_segments
