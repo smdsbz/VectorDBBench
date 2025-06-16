@@ -88,7 +88,7 @@ class AWSOpenSearch(VectorDB):
                 "number_of_shards": self.case_config.number_of_shards,
                 "number_of_replicas": self.case_config.number_of_replicas,
                 "translog.flush_threshold_size": self.case_config.flush_threshold_size,
-                "knn.advanced.approximate_threshold": "-1",
+                # "knn.advanced.approximate_threshold": "-1",
             },
             "refresh_interval": self.case_config.refresh_interval,
         }
@@ -428,9 +428,9 @@ class AWSOpenSearch(VectorDB):
         self.client.cluster.put_settings(cluster_settings_body)
 
         log.info("Updating the graph threshold to ensure that during merge we can do graph creation.")
-        output = self.client.indices.put_settings(
-            index=self.index_name, body={"index.knn.advanced.approximate_threshold": "0"}
-        )
+        # output = self.client.indices.put_settings(
+        #     index=self.index_name, body={"index.knn.advanced.approximate_threshold": "0"}
+        # )
         log.info(f"response of updating setting is: {output}")
 
         log.info(f"Starting force merge for index {self.index_name}")
