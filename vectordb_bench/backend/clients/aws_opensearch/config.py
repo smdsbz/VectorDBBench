@@ -118,7 +118,7 @@ class AWSOpenSearchIndexConfig(BaseModel, DBCaseConfig):
             "parameters": {
                 "ef_construction": self.efConstruction,
                 "m": self.M,
-                "ef_search": self.ef_search,
+                # "ef_search": self.ef_search,
                 **(
                     {"encoder": {"name": "sq", "parameters": {"type": self.quantization_type.fp16.value}}}
                     if self.use_quant
