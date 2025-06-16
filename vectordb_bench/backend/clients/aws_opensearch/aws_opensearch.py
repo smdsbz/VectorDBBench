@@ -94,7 +94,10 @@ class AWSOpenSearch(VectorDB):
         }
         settings["index"]["knn.algo_param.ef_search"] = ef_search_value
         mappings = {
-            "_source": {"excludes": [self.vector_col_name], "recovery_source_excludes": [self.vector_col_name]},
+            "_source": {
+                "excludes": [self.vector_col_name],
+                # "recovery_source_excludes": [self.vector_col_name]
+            },
             "properties": {
                 self.id_col_name: {"type": "integer", "store": True},
                 self.label_col_name: {"type": "keyword"},
