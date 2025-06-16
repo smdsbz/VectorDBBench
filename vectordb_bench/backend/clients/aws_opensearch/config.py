@@ -44,7 +44,7 @@ class AWSOSQuantization(Enum):
 
 class AWSOpenSearchIndexConfig(BaseModel, DBCaseConfig):
     metric_type: MetricType = MetricType.L2
-    engine: AWSOS_Engine = AWSOS_Engine.faiss
+    engine: AWSOS_Engine = AWSOS_Engine.lvector
     efConstruction: int = 256
     efSearch: int = 100
     engine_name: str | None = None
