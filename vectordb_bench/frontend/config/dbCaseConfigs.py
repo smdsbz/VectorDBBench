@@ -1571,7 +1571,7 @@ CaseConfigParamInput_ENGINE_NAME_AWSOpensearch = CaseConfigInput(
     inputHelp="HNSW algorithm implementation to use",
     inputType=InputType.Option,
     inputConfig={
-        "options": ["faiss", "nmslib", "lucene"],
+        "options": ["faiss", "nmslib", "lucene", "lvector"],
         "default": "faiss",
     },
 )

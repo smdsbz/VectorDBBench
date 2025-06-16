@@ -34,6 +34,7 @@ class AWSOpenSearchConfig(DBConfig, BaseModel):
 class AWSOS_Engine(Enum):
     faiss = "faiss"
     lucene = "lucene"
+    lvector = "lvector"
 
 
 class AWSOSQuantization(Enum):

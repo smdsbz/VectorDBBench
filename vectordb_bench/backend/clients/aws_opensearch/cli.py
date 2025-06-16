@@ -46,7 +46,7 @@ class AWSOpenSearchTypedDict(TypedDict):
         str,
         click.option(
             "--engine",
-            type=click.Choice(["nmslib", "faiss", "lucene"], case_sensitive=False),
+            type=click.Choice(["nmslib", "faiss", "lucene", "lvector"], case_sensitive=False),
             help="HNSW algorithm implementation to use",
             default="faiss",
         ),
@@ -111,7 +111,7 @@ class AWSOpenSearchTypedDict(TypedDict):
         str | None,
         click.option(
             "--engine",
-            type=click.Choice(["faiss", "lucene"]),
+            type=click.Choice(["faiss", "lucene", "lvector"]),
             help="quantization type for vectors (in index)",
             default="faiss",
             required=False,
