@@ -442,7 +442,11 @@ class AWSOpenSearch(VectorDB):
         force_merge_task_id = self.client.transport.perform_request("POST", force_merge_endpoint)["task"]
         while True:
             time.sleep(WAITING_FOR_FORCE_MERGE_SEC)
-            task_status = self.client.tasks.get(task_id=force_merge_task_id)
+            try:
+                task_status = self.client.tasks.get(task_id=force_merge_task_id)
+            except Exception as e:
+                log.warn(f"Failed to get task status (Lindorm cannot query tasks that are already finished): {e}")
+                break
             if task_status["completed"]:
                 break
         log.info(f"Completed force merge for index {self.index_name}")
