@@ -34,6 +34,7 @@ class AWSOpenSearchConfig(DBConfig, BaseModel):
 class AWSOS_Engine(Enum):
     faiss = "faiss"
     lucene = "lucene"
+    lvector = "lvector"
 
 
 class AWSOSQuantization(Enum):
@@ -43,7 +44,7 @@ class AWSOSQuantization(Enum):
 
 class AWSOpenSearchIndexConfig(BaseModel, DBCaseConfig):
     metric_type: MetricType = MetricType.L2
-    engine: AWSOS_Engine = AWSOS_Engine.faiss
+    engine: AWSOS_Engine = AWSOS_Engine.lvector
     efConstruction: int = 256
     ef_search: int = 200
     engine_name: str | None = None
@@ -53,6 +54,7 @@ class AWSOpenSearchIndexConfig(BaseModel, DBCaseConfig):
     number_of_shards: int | None = 1
     number_of_replicas: int | None = 0
     number_of_segments: int | None = 1
+    number_of_indexing_clients: int | None = 1
     refresh_interval: str | None = "60s"
     force_merge_enabled: bool | None = True
     flush_threshold_size: str | None = "5120mb"
@@ -77,18 +79,13 @@ class AWSOpenSearchIndexConfig(BaseModel, DBCaseConfig):
         log.info(f"Using metric_type: {self.metric_type_name} for index creation")
         log.info(f"Resulting space_type: {self.parse_metric()} for index creation")
 
-        parameters = {"ef_construction": self.efConstruction, "m": self.M}
-
-        if self.engine == AWSOS_Engine.faiss and self.faiss_use_fp16:
-            parameters["encoder"] = {"name": "sq", "parameters": {"type": "fp16"}}
-
         return {
             "name": "hnsw",
             "engine": self.engine.value,
             "parameters": {
                 "ef_construction": self.efConstruction,
                 "m": self.M,
-                "ef_search": self.efSearch,
+                # "ef_search": self.ef_search,
                 **(
                     {"encoder": {"name": "sq", "parameters": {"type": self.quantization_type.fp16.value}}}
                     if self.quantization_type is not AWSOSQuantization.fp32

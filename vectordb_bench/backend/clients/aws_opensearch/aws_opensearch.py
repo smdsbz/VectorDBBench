@@ -85,13 +85,16 @@ class AWSOpenSearch(VectorDB):
                 "number_of_shards": self.case_config.number_of_shards,
                 "number_of_replicas": self.case_config.number_of_replicas,
                 "translog.flush_threshold_size": self.case_config.flush_threshold_size,
-                "knn.advanced.approximate_threshold": "-1",
+                # "knn.advanced.approximate_threshold": "-1",
             },
             "refresh_interval": self.case_config.refresh_interval,
         }
         settings["index"]["knn.algo_param.ef_search"] = ef_search_value
         mappings = {
-            "_source": {"excludes": [self.vector_col_name], "recovery_source_excludes": [self.vector_col_name]},
+            "_source": {
+                "excludes": [self.vector_col_name],
+                # "recovery_source_excludes": [self.vector_col_name]
+            },
             "properties": {
                 **{categoryCol: {"type": "keyword"} for categoryCol in self.category_col_names},
                 self.vector_col_name: {
@@ -287,9 +290,12 @@ class AWSOpenSearch(VectorDB):
                     self.vector_col_name: {
                         "vector": query,
                         "k": k,
-                        "method_parameters": {"ef_search": self.case_config.efSearch},
+                        # "method_parameters": {"ef_search": self.case_config.efSearch},
                     }
                 }
+            },
+            "ext": {
+                "lvector": {"ef_search": f"{self.case_config.ef_search}"},
             },
             **({"filter": {"range": {self.id_col_name: {"gt": filters["id"]}}}} if filters else {}),
         }
@@ -307,7 +313,7 @@ class AWSOpenSearch(VectorDB):
             log.debug(f"Search took: {resp['took']}")
             log.debug(f"Search shards: {resp['_shards']}")
             log.debug(f"Search hits total: {resp['hits']['total']}")
-            return [int(h["fields"][self.id_col_name][0]) for h in resp["hits"]["hits"]]
+            return [int(h[self.id_col_name]) for h in resp["hits"]["hits"]]
         except Exception as e:
             log.warning(f"Failed to search: {self.index_name} error: {e!s}")
             raise e from None
@@ -387,10 +393,10 @@ class AWSOpenSearch(VectorDB):
         self.client.cluster.put_settings(cluster_settings_body)
 
         log.info("Updating the graph threshold to ensure that during merge we can do graph creation.")
-        output = self.client.indices.put_settings(
-            index=self.index_name, body={"index.knn.advanced.approximate_threshold": "0"}
-        )
-        log.info(f"response of updating setting is: {output}")
+        # output = self.client.indices.put_settings(
+        #     index=self.index_name, body={"index.knn.advanced.approximate_threshold": "0"}
+        # )
+        # log.info(f"response of updating setting is: {output}")
 
         log.debug(f"Starting force merge for index {self.index_name}")
         segments = self.case_config.number_of_segments
@@ -398,13 +404,18 @@ class AWSOpenSearch(VectorDB):
         force_merge_task_id = self.client.transport.perform_request("POST", force_merge_endpoint)["task"]
         while True:
             time.sleep(WAITING_FOR_FORCE_MERGE_SEC)
-            task_status = self.client.tasks.get(task_id=force_merge_task_id)
+            try:
+                task_status = self.client.tasks.get(task_id=force_merge_task_id)
+            except Exception as e:
+                log.warn(f"Failed to get task status (Lindorm cannot query tasks that are already finished): {e}")
+                break
             if task_status["completed"]:
                 break
         log.debug(f"Completed force merge for index {self.index_name}")
 
     def _load_graphs_to_memory(self, client: OpenSearch):
-        if self.case_config.engine != AWSOS_Engine.lucene:
-            log.info("Calling warmup API to load graphs into memory")
-            warmup_endpoint = f"/_plugins/_knn/warmup/{self.index_name}"
-            client.transport.perform_request("GET", warmup_endpoint)
+        # if self.case_config.engine != AWSOS_Engine.lucene:
+        #     log.info("Calling warmup API to load graphs into memory")
+        #     warmup_endpoint = f"/_plugins/_knn/warmup/{self.index_name}"
+        #     client.transport.perform_request("GET", warmup_endpoint)
+        pass
