@@ -452,7 +452,8 @@ class AWSOpenSearch(VectorDB):
         log.info(f"Completed force merge for index {self.index_name}")
 
     def _load_graphs_to_memory(self, client: OpenSearch):
-        if self.case_config.engine != AWSOS_Engine.lucene:
-            log.info("Calling warmup API to load graphs into memory")
-            warmup_endpoint = f"/_plugins/_knn/warmup/{self.index_name}"
-            client.transport.perform_request("GET", warmup_endpoint)
+        # if self.case_config.engine != AWSOS_Engine.lucene:
+        #     log.info("Calling warmup API to load graphs into memory")
+        #     warmup_endpoint = f"/_plugins/_knn/warmup/{self.index_name}"
+        #     client.transport.perform_request("GET", warmup_endpoint)
+        pass
