@@ -307,7 +307,7 @@ class AWSOpenSearch(VectorDB):
                     self.vector_col_name: {
                         "vector": query,
                         "k": k,
-                        "method_parameters": self.case_config.search_param(),
+                        # "method_parameters": self.case_config.search_param(),
                         **({"filter": self.filter} if self.filter else {}),
                         **(
                             {"rescore": {"oversample_factor": self.case_config.oversample_factor}}
@@ -317,6 +317,7 @@ class AWSOpenSearch(VectorDB):
                     }
                 }
             },
+            "ext": {"lvector": self.case_config.search_param()},
         }
 
         try:
@@ -334,7 +335,7 @@ class AWSOpenSearch(VectorDB):
             log.debug(f"Search shards: {resp['_shards']}")
             log.debug(f"Search hits total: {resp['hits']['total']}")
             try:
-                return [int(h["fields"][self.id_col_name][0]) for h in resp["hits"]["hits"]]
+                return [int(h["fields"][self.id_col_name][0]) for h in resp["hits"]]
             except Exception:
                 # empty results
                 return []
