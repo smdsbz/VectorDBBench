@@ -317,7 +317,7 @@ class AWSOpenSearch(VectorDB):
                     }
                 }
             },
-            "ext": {"lvector": self.case_config.search_param()},
+            "ext": {"lvector": {"ef_search": f"{self.case_config.efSearch}"}},
         }
 
         try:
