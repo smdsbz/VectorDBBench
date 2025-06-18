@@ -335,7 +335,7 @@ class AWSOpenSearch(VectorDB):
             log.debug(f"Search shards: {resp['_shards']}")
             log.debug(f"Search hits total: {resp['hits']['total']}")
             try:
-                return [int(h["fields"][self.id_col_name][0]) for h in resp["hits"]]
+                return [int(h[self.id_col_name][0]) for h in resp["hits"]]
             except Exception:
                 # empty results
                 return []
