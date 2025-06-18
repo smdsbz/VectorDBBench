@@ -19,8 +19,8 @@ log = logging.getLogger(__name__)
 
 class AWSOpenSearchTypedDict(TypedDict):
     host: Annotated[str, click.option("--host", type=str, help="Db host", required=True)]
-    port: Annotated[int, click.option("--port", type=int, default=80, help="Db Port")]
-    user: Annotated[str, click.option("--user", type=str, help="Db User")]
+    port: Annotated[int, click.option("--port", type=int, default=30070, help="Db Port")]
+    user: Annotated[str, click.option("--user", type=str, default='root', help="Db User")]
     password: Annotated[str, click.option("--password", type=str, help="Db password")]
     number_of_shards: Annotated[
         int,
@@ -103,17 +103,6 @@ class AWSOpenSearchTypedDict(TypedDict):
             type=click.Choice(["fp32", "fp16"]),
             help="quantization type for vectors (in index)",
             default="fp32",
-            required=False,
-        ),
-    ]
-
-    engine: Annotated[
-        str | None,
-        click.option(
-            "--engine",
-            type=click.Choice(["faiss", "lucene", "lvector"]),
-            help="quantization type for vectors (in index)",
-            default="faiss",
             required=False,
         ),
     ]

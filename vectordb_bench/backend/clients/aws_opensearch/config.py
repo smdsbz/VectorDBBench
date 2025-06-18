@@ -10,8 +10,8 @@ log = logging.getLogger(__name__)
 
 class AWSOpenSearchConfig(DBConfig, BaseModel):
     host: str = ""
-    port: int = 80
-    user: str = ""
+    port: int = 30070
+    user: str = "root"
     password: SecretStr = ""
 
     def to_dict(self) -> dict:
@@ -43,13 +43,13 @@ class AWSOSQuantization(Enum):
 
 
 class AWSOpenSearchIndexConfig(BaseModel, DBCaseConfig):
-    metric_type: MetricType = MetricType.L2
+    metric_type: MetricType = MetricType.COSINE
     engine: AWSOS_Engine = AWSOS_Engine.lvector
-    efConstruction: int = 256
-    ef_search: int = 200
+    efConstruction: int = 360
+    ef_search: int = 100
     engine_name: str | None = None
     metric_type_name: str | None = None
-    M: int = 16
+    M: int = 30
     index_thread_qty: int | None = 4
     number_of_shards: int | None = 1
     number_of_replicas: int | None = 0

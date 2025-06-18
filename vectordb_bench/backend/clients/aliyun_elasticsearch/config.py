@@ -15,7 +15,7 @@ class AliyunElasticsearchConfig(DBConfig, BaseModel):
     port: int = 9200
     user: str = "elastic"
     password: SecretStr
-    es_version: ESVersionEnum = ESVersionEnum.latest
+    es_version: ESVersionEnum = ESVersionEnum.eight
 
     def to_dict(self) -> dict:
         return {
