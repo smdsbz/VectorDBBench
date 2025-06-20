@@ -317,7 +317,12 @@ class AWSOpenSearch(VectorDB):
                     }
                 }
             },
-            "ext": {"lvector": {"ef_search": f"{self.case_config.efSearch}"}},
+            "ext": {
+                "lvector": {
+                    "ef_search": f"{self.case_config.efSearch}",
+                    # **({'filter_type': 'efficient_filter'} if self.filter else {}),
+                },
+            },
         }
 
         try:
