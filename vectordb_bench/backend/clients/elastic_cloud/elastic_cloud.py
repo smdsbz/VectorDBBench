@@ -240,7 +240,10 @@ class ElasticCloud(VectorDB):
             docvalue_fields=[self.id_col_name],
             stored_fields="_none_",
             filter_path=[f"hits.hits.fields.{self.id_col_name}"],
+            # post_filter={"range": {self.id_col_name: {"gt": filters["id"]}}} if filters else None,
         )
+        if len(res) == 0:
+            return []
         return [h["fields"][self.id_col_name][0] for h in res["hits"]["hits"]]
 
     def optimize(self, data_size: int | None = None):
