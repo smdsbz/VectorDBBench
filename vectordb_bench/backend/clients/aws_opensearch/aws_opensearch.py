@@ -66,7 +66,7 @@ class AWSOpenSearch(VectorDB):
 
     def _create_index(self, client: OpenSearch) -> None:
         ef_search_value = (
-            self.case_config.ef_search if self.case_config.ef_search is not None else self.case_config.efSearch
+            self.case_config.efSearch if self.case_config.efSearch is not None else self.case_config.efSearch
         )
         log.info(f"Creating index with ef_search: {ef_search_value}")
         log.info(f"Creating index with number_of_replicas: {self.case_config.number_of_replicas}")
