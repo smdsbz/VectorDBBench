@@ -115,6 +115,7 @@ class AWSOpenSearchIndexConfig(BaseModel, DBCaseConfig):
         return {
             "name": "hnsw",
             "engine": self.engine.value,
+            "space_type": self.parse_metric(),
             "parameters": {
                 "ef_construction": self.efConstruction,
                 "m": self.M,
