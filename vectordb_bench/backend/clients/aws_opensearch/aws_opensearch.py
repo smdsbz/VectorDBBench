@@ -30,7 +30,7 @@ class AWSOpenSearch(VectorDB):
         db_config: dict,
         db_case_config: AWSOpenSearchIndexConfig,
         index_name: str = "vdb_bench_index",  # must be lowercase
-        id_col_name: str = "_id",
+        id_col_name: str = "id",
         label_col_name: str = "label",
         vector_col_name: str = "embedding",
         drop_old: bool = False,
@@ -155,12 +155,12 @@ class AWSOpenSearch(VectorDB):
     ) -> tuple[int, Exception]:
         insert_data = []
         for i in range(len(embeddings)):
-            index_data = {"index": {"_index": self.index_name, self.id_col_name: metadata[i]}}
+            index_data = {"index": {"_index": self.index_name, **({self.id_col_name: metadata[i]} if self.id_col_name == '_id' else {})}}
             if self.with_scalar_labels and self.case_config.use_routing:
                 index_data["routing"] = labels_data[i]
             insert_data.append(index_data)
 
-            other_data = {self.vector_col_name: embeddings[i]}
+            other_data = {self.vector_col_name: embeddings[i], **({self.id_col_name: metadata[i]} if self.id_col_name != '_id' else {})}
             if self.with_scalar_labels:
                 other_data[self.label_col_name] = labels_data[i]
             insert_data.append(other_data)
