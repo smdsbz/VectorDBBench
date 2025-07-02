@@ -139,12 +139,12 @@ class AWSOpenSearch(VectorDB):
         assert self.client is not None, "should self.init() first"
 
         num_clients = self.case_config.number_of_indexing_clients or 1
-        log.info(f"Number of indexing clients from case_config: {num_clients}")
+        # log.info(f"Number of indexing clients from case_config: {num_clients}")
 
         if num_clients <= 1:
-            log.info("Using single client for data insertion")
+            # log.info("Using single client for data insertion")
             return self._insert_with_single_client(embeddings, metadata, labels_data)
-        log.info(f"Using {num_clients} parallel clients for data insertion")
+        # log.info(f"Using {num_clients} parallel clients for data insertion")
         return self._insert_with_multiple_clients(embeddings, metadata, num_clients, labels_data)
 
     def _insert_with_single_client(
