@@ -189,7 +189,7 @@ class AWSOpenSearch(VectorDB):
 
         for i in range(0, len(embeddings_list), chunk_size):
             end = min(i + chunk_size, len(embeddings_list))
-            chunks.append((embeddings_list[i:end], metadata[i:end], labels_data[i:end]))
+            chunks.append((embeddings_list[i:end], metadata[i:end], labels_data[i:end] if labels_data else [None for _ in range(end-i)]))
 
         clients = []
         for _ in range(min(num_clients, len(chunks))):
