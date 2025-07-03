@@ -332,7 +332,7 @@ class AWSOpenSearch(VectorDB):
                 body=body,
                 size=k,
                 _source=False,
-                docvalue_fields=[self.id_col_name],
+                docvalue_fields=['_id'],
                 stored_fields="_none_",
                 preference="_only_local" if self.case_config.number_of_shards == 1 else None,
                 routing=self.routing_key,
@@ -340,11 +340,7 @@ class AWSOpenSearch(VectorDB):
             log.debug(f"Search took: {resp['took']}")
             log.debug(f"Search shards: {resp['_shards']}")
             log.debug(f"Search hits total: {resp['hits']['total']}")
-            try:
-                return [int(h["fields"][self.id_col_name][0]) for h in resp["hits"]["hits"]]
-            except Exception:
-                # empty results
-                return []
+            return [int(h['_id'] if self.filter is None else h['fields']['_id'][0]) for h in resp["hits"]["hits"]]
         except Exception as e:
             log.warning(f"Failed to search: {self.index_name} error: {e!s}")
             raise e from None
