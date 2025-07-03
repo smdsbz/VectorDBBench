@@ -30,7 +30,7 @@ class AWSOpenSearch(VectorDB):
         db_config: dict,
         db_case_config: AWSOpenSearchIndexConfig,
         index_name: str = "vdb_bench_index",  # must be lowercase
-        id_col_name: str = "id",
+        id_col_name: str = "meta_id",
         label_col_name: str = "label",
         vector_col_name: str = "embedding",
         drop_old: bool = False,
@@ -99,7 +99,8 @@ class AWSOpenSearch(VectorDB):
                 # "recovery_source_excludes": [self.vector_col_name]
             },
             "properties": {
-                self.id_col_name: {"type": "integer", "store": True},
+                # '_id': {"type": "integer", "store": True},
+                **({self.id_col_name: {"type": "integer", "store": True}} if self.id_col_name != '_id' else {}),
                 self.label_col_name: {"type": "keyword"},
                 self.vector_col_name: {
                     "type": "knn_vector",
@@ -155,7 +156,7 @@ class AWSOpenSearch(VectorDB):
     ) -> tuple[int, Exception]:
         insert_data = []
         for i in range(len(embeddings)):
-            index_data = {"index": {"_index": self.index_name, **({self.id_col_name: metadata[i]} if self.id_col_name == '_id' else {})}}
+            index_data = {"index": {"_index": self.index_name, '_id': metadata[i]}}
             if self.with_scalar_labels and self.case_config.use_routing:
                 index_data["routing"] = labels_data[i]
             insert_data.append(index_data)
@@ -204,7 +205,7 @@ class AWSOpenSearch(VectorDB):
 
             insert_data = []
             for i in range(len(chunk_embeddings)):
-                index_data = {"index": {"_index": self.index_name, **({self.id_col_name: chunk_metadata[i]} if self.id_col_name == '_id' else {})}}
+                index_data = {"index": {"_index": self.index_name, '_id': chunk_metadata[i]}}
                 if self.with_scalar_labels and self.case_config.use_routing:
                     index_data["routing"] = chunk_labels_data[i]
                 insert_data.append(index_data)
@@ -340,7 +341,7 @@ class AWSOpenSearch(VectorDB):
             log.debug(f"Search shards: {resp['_shards']}")
             log.debug(f"Search hits total: {resp['hits']['total']}")
             try:
-                return [int(h[self.id_col_name][0]) for h in resp["hits"]]
+                return [int(h["fields"][self.id_col_name][0]) for h in resp["hits"]["hits"]]
             except Exception:
                 # empty results
                 return []
