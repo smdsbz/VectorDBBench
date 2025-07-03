@@ -258,7 +258,7 @@ class AWSOpenSearch(VectorDB):
 
     def _update_ef_search_before_search(self, client: OpenSearch):
         ef_search_value = (
-            self.case_config.ef_search if self.case_config.ef_search is not None else self.case_config.efSearch
+            self.case_config.efSearch if self.case_config.efSearch is not None else self.case_config.efSearch
         )
 
         try:
@@ -378,7 +378,7 @@ class AWSOpenSearch(VectorDB):
 
     def _update_ef_search(self):
         ef_search_value = (
-            self.case_config.ef_search if self.case_config.ef_search is not None else self.case_config.efSearch
+            self.case_config.efSearch if self.case_config.efSearch is not None else self.case_config.efSearch
         )
         log.info(f"Updating ef_search parameter to: {ef_search_value}")
 
