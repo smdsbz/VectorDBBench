@@ -204,12 +204,12 @@ class AWSOpenSearch(VectorDB):
 
             insert_data = []
             for i in range(len(chunk_embeddings)):
-                index_data = {"index": {"_index": self.index_name, self.id_col_name: chunk_metadata[i]}}
+                index_data = {"index": {"_index": self.index_name, **({self.id_col_name: chunk_metadata[i]} if self.id_col_name == '_id' else {})}}
                 if self.with_scalar_labels and self.case_config.use_routing:
                     index_data["routing"] = chunk_labels_data[i]
                 insert_data.append(index_data)
 
-                other_data = {self.vector_col_name: chunk_embeddings[i]}
+                other_data = {self.vector_col_name: chunk_embeddings[i], **({self.id_col_name: chunk_metadata[i]} if self.id_col_name != '_id' else {})}
                 if self.with_scalar_labels:
                     other_data[self.label_col_name] = chunk_labels_data[i]
                 insert_data.append(other_data)
