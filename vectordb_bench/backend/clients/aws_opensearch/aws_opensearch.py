@@ -196,7 +196,7 @@ class AWSOpenSearch(VectorDB):
             client = OpenSearch(**self.db_config)
             clients.append(client)
 
-        log.info(f"AWS_OpenSearch using {len(clients)} parallel clients for data insertion")
+        # log.info(f"AWS_OpenSearch using {len(clients)} parallel clients for data insertion")
 
         def insert_chunk(client_idx: int, chunk_idx: int):
             chunk_embeddings, chunk_metadata, chunk_labels_data = chunks[chunk_idx]
@@ -216,7 +216,7 @@ class AWSOpenSearch(VectorDB):
 
             try:
                 resp = client.bulk(insert_data)
-                log.info(f"Client {client_idx} added {len(resp['items'])} documents")
+                # log.info(f"Client {client_idx} added {len(resp['items'])} documents")
                 return len(chunk_embeddings), None
             except Exception as e:
                 log.warning(f"Client {client_idx} failed to insert data: {e!s}")
@@ -249,10 +249,10 @@ class AWSOpenSearch(VectorDB):
             return self._insert_with_single_client(embeddings, metadata)
 
         resp = self.client.indices.stats(self.index_name)
-        log.info(
-            f"""Total document count in index after parallel insertion:
-                {resp['_all']['primaries']['indexing']['index_total']}""",
-        )
+        # log.info(
+        #     f"""Total document count in index after parallel insertion:
+        #         {resp['_all']['primaries']['indexing']['index_total']}""",
+        # )
 
         return (total_count, None)
 
