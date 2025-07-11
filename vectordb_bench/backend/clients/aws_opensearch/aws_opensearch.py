@@ -321,7 +321,7 @@ class AWSOpenSearch(VectorDB):
             "ext": {
                 "lvector": {
                     "ef_search": f"{self.case_config.efSearch}",
-                    # **({'filter_type': 'efficient_filter'} if self.filter else {}),
+                    **({'filter_type': 'pre_filter'} if self.filter else {}),
                 },
             },
         }
@@ -333,14 +333,14 @@ class AWSOpenSearch(VectorDB):
                 size=k,
                 _source=False,
                 docvalue_fields=['_id'],
-                stored_fields="_none_",
+                # stored_fields="_none_",
                 preference="_only_local" if self.case_config.number_of_shards == 1 else None,
                 routing=self.routing_key,
             )
             log.debug(f"Search took: {resp['took']}")
             log.debug(f"Search shards: {resp['_shards']}")
             log.debug(f"Search hits total: {resp['hits']['total']}")
-            return [int(h['_id'] if self.filter is None else h['fields']['_id'][0]) for h in resp["hits"]["hits"]]
+            return [int(h['_id']) for h in resp["hits"]["hits"]]
         except Exception as e:
             log.warning(f"Failed to search: {self.index_name} error: {e!s}")
             raise e from None
