@@ -520,7 +520,7 @@ CaseConfigParamInput_M = CaseConfigInput(
     inputConfig={
         "min": 4,
         "max": 64,
-        "value": 16,
+        "value": 30,
     },
     isDisplayed=lambda config: config.get(CaseConfigParamType.IndexType, None)
     in [
@@ -538,7 +538,7 @@ CaseConfigParamInput_m = CaseConfigInput(
     inputConfig={
         "min": 4,
         "max": 64,
-        "value": 16,
+        "value": 30,
     },
     isDisplayed=lambda config: config.get(CaseConfigParamType.IndexType, None) == IndexType.HNSW.value,
 )
@@ -550,7 +550,7 @@ CaseConfigParamInput_EFConstruction_Milvus = CaseConfigInput(
     inputConfig={
         "min": 8,
         "max": 512,
-        "value": 256,
+        "value": 360,
     },
     isDisplayed=lambda config: config[CaseConfigParamType.IndexType]
     in [
@@ -636,7 +636,7 @@ CaseConfigParamInput_EFConstruction_AWSOpensearch = CaseConfigInput(
     inputConfig={
         "min": 100,
         "max": 1024,
-        "value": 256,
+        "value": 360,
     },
 )
 
@@ -646,7 +646,7 @@ CaseConfigParamInput_M_AWSOpensearch = CaseConfigInput(
     inputConfig={
         "min": 4,
         "max": 64,
-        "value": 16,
+        "value": 30,
     },
 )
 
@@ -656,7 +656,7 @@ CaseConfigParamInput_EF_SEARCH_AWSOpensearch = CaseConfigInput(
     inputConfig={
         "min": 1,
         "max": 1024,
-        "value": 256,
+        "value": 100,
     },
 )
 
@@ -666,7 +666,7 @@ CaseConfigParamInput_EF_SEARCH_AliyunOpensearch = CaseConfigInput(
     inputConfig={
         "min": 1,
         "max": 1000000,
-        "value": 40,
+        "value": 100,
     },
 )
 
@@ -1525,7 +1525,7 @@ CaseConfigParamInput_NUMBER_OF_INDEXING_CLIENTS_AWSOpensearch = CaseConfigInput(
     inputConfig={
         "min": 1,
         "max": 32,
-        "value": 1,
+        "value": 8,
     },
 )
 
@@ -1537,7 +1537,7 @@ CaseConfigParamInput_NUMBER_OF_SHARDS_AWSOpensearch = CaseConfigInput(
     inputConfig={
         "min": 1,
         "max": 32,
-        "value": 1,
+        "value": 8,
     },
 )
 
@@ -1572,7 +1572,7 @@ CaseConfigParamInput_ENGINE_NAME_AWSOpensearch = CaseConfigInput(
     inputType=InputType.Option,
     inputConfig={
         "options": ["faiss", "nmslib", "lucene", "lvector"],
-        "default": "faiss",
+        "default": "lvector",
     },
 )
 
@@ -1583,7 +1583,7 @@ CaseConfigParamInput_METRIC_TYPE_NAME_AWSOpensearch = CaseConfigInput(
     inputType=InputType.Option,
     inputConfig={
         "options": ["l2", "cosine", "ip"],
-        "default": "l2",
+        "default": "consine",
     },
 )
 
