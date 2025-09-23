@@ -73,6 +73,31 @@ class AutoIndexConfig(MilvusIndexConfig, DBCaseConfig):
         }
 
 
+class VSAGConfig(MilvusIndexConfig, DBCaseConfig):
+    index: IndexType = IndexType.MILVUS_VSAG
+    M: int
+    efConstruction: int
+    baseQuantizationType: str = 'sq8'
+    ef: int | None = None
+
+    def index_param(self) -> dict:
+        return {
+            "metric_type": self.parse_metric(),
+            "index_type": self.index.value,
+            "params": {
+                "M": self.M,
+                "efConstruction": self.efConstruction,
+                "baseQuantizationType": self.baseQuantizationType,
+            },
+        }
+
+    def search_param(self) -> dict:
+        return {
+            "metric_type": self.parse_metric(),
+            "params": {"efSearch": self.ef},
+        }
+
+
 class HNSWConfig(MilvusIndexConfig, DBCaseConfig):
     M: int
     efConstruction: int
@@ -91,7 +116,6 @@ class HNSWConfig(MilvusIndexConfig, DBCaseConfig):
             "metric_type": self.parse_metric(),
             "params": {"ef": self.ef},
         }
-
 
 class HNSWSQConfig(HNSWConfig, DBCaseConfig):
     index: IndexType = IndexType.HNSW_SQ
@@ -430,4 +454,5 @@ _milvus_case_config = {
     IndexType.GPU_IVF_PQ: GPUIVFPQConfig,
     IndexType.GPU_CAGRA: GPUCAGRAConfig,
     IndexType.GPU_BRUTE_FORCE: GPUBruteForceConfig,
+    IndexType.MILVUS_VSAG: VSAGConfig,
 }

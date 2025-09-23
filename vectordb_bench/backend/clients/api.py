@@ -42,6 +42,7 @@ class IndexType(str, Enum):
     SCANN = "scann"
     Hologres_HGraph = "HGraph"
     Hologres_Graph = "Graph"
+    MILVUS_VSAG = "VSAG"
     NONE = "NONE"
 
 

@@ -384,6 +384,7 @@ CaseConfigParamInput_IndexType = CaseConfigInput(
             IndexType.GPU_IVF_PQ.value,
             IndexType.GPU_CAGRA.value,
             IndexType.GPU_BRUTE_FORCE.value,
+            IndexType.MILVUS_VSAG.value,
         ],
     },
 )
@@ -635,9 +636,19 @@ CaseConfigParamInput_M = CaseConfigInput(
         IndexType.HNSW_SQ.value,
         IndexType.HNSW_PQ.value,
         IndexType.HNSW_PRQ.value,
+        IndexType.MILVUS_VSAG.value,
     ],
 )
 
+CaseConfigParamInput_baseQuantizationType = CaseConfigInput(
+    label=CaseConfigParamType.baseQuantizationType,
+    InputType=InputType.Text,
+    inputConfig={
+        'options': ['sq8_uniform', 'sq8', 'fp16'],
+    },
+    isDisplayed=lambda config: config.get(CaseConfigParamType.IndexType, None)
+        in [IndexType.MILVUS_VSAG.value,]
+)
 
 CaseConfigParamInput_m = CaseConfigInput(
     label=CaseConfigParamType.m,
@@ -665,6 +676,7 @@ CaseConfigParamInput_EFConstruction_Milvus = CaseConfigInput(
         IndexType.HNSW_SQ.value,
         IndexType.HNSW_PQ.value,
         IndexType.HNSW_PRQ.value,
+        IndexType.MILVUS_VSAG.value,
     ],
 )
 
@@ -935,6 +947,7 @@ CaseConfigParamInput_EF_Milvus = CaseConfigInput(
         IndexType.HNSW_SQ.value,
         IndexType.HNSW_PQ.value,
         IndexType.HNSW_PRQ.value,
+        IndexType.MILVUS_VSAG.value,
     ],
 )
 
@@ -1725,6 +1738,7 @@ MilvusLoadConfig = [
 MilvusPerformanceConfig = [
     CaseConfigParamInput_IndexType,
     CaseConfigParamInput_M,
+    # CaseConfigParamInput_baseQuantizationType,
     CaseConfigParamInput_EFConstruction_Milvus,
     CaseConfigParamInput_EF_Milvus,
     CaseConfigParamInput_SearchList,

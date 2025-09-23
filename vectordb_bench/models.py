@@ -45,6 +45,7 @@ class CaseConfigParamType(Enum):
 
     IndexType = "IndexType"
     M = "M"
+    baseQuantizationType = 'baseQuantizationType'
     EFConstruction = "efConstruction"
     ef_construction = "ef_construction"
     EF = "ef"
